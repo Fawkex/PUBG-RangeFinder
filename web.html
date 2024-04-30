@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Map Range Finder</title>
+        <style>
+            /* 隐藏滚动条 */
+            body, html {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden; /* 关闭滚动条 */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            /* 确保图片适应屏幕大小，这里使用object-fit属性保持图片宽高比填充容器 */
+            #dynamic-image {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain; /* 或使用 "cover" 根据需要调整图片填充方式 */
+            }
+            
+            /* 图片容器，确保图片能自适应并居中 */
+            #image-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+    </head>
+<body>
+
+<img id="dynamic-image" src="" alt="Loading image..." />
+
+<script>
+    // 定义一个函数来获取并设置图片源
+    async function fetchAndDisplayImage() {
+        try {
+            const response = await fetch('/image');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            document.getElementById('dynamic-image').src = imageUrl;
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    }
+
+    // 页面加载时立即加载一次图片
+    window.onload = fetchAndDisplayImage;
+
+    // 每隔200毫秒更新图片
+    setInterval(fetchAndDisplayImage, 200);
+</script>
+
+</body>
+</html>
